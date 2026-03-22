@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Sub-25">
+<meta name="theme-color" content="#0f0f12">
+<title>Sub-25 · 5K Coaching</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='38' fill='%230f0f12'/%3E%3Ctext x='90' y='118' font-family='Arial Black' font-size='82' font-weight='900' fill='%23FF6B35' text-anchor='middle'%3E25%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════
+   DESIGN TOKENS — Bevel-inspired dark
+═══════════════════════════════════ */
+:root {
+  /* Surfaces */
+  --s0:  #0f0f12;   /* page bg */
+  --s1:  #17171c;   /* card bg */
+  --s2:  #1f1f26;   /* raised card */
+  --s3:  #27272f;   /* input / chip */
+  --s4:  #323239;   /* border */
+
+  /* Text */
+  --t1:  #f2f0ec;   /* primary */
+  --t2:  #9896a0;   /* secondary */
+  --t3:  #55535e;   /* tertiary */
+
+  /* Zone palette — bold, distinct */
+  --z1:  #4A9EE0;   /* Z1 recovery – steel blue */
+  --z2:  #3DC97A;   /* Z2 aerobic – green */
+  --z3:  #F5C842;   /* Z3 tempo – gold */
+  --z4:  #FF8C42;   /* Z4 threshold – orange */
+  --z5:  #FF4F4F;   /* Z5 max – red */
+
+  /* Accent */
+  --accent: #FF6B35; /* brand orange */
+  --accent-soft: rgba(255,107,53,0.12);
+  --accent-mid:  rgba(255,107,53,0.25);
+
+  /* Gamification */
+  --xp:   #B88CFF; /* purple for XP/badges */
+
+  /* Fonts */
+  --f-head: 'Syne', 'Inter', sans-serif;
+  --f-body: 'Inter', -apple-system, sans-serif;
+
+  --nav-h:  52px;
+  --tab-h:  62px;
+  --safe-t: env(safe-area-inset-top,    0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --r:      14px;
+  --r-sm:   10px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+body {
+  background: var(--s0);
+  color: var(--t1);
+  font-family: var(--f-body);
+  font-size: 15px;
+  line-height: 1.55;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════ UTILITY ══════════ */
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+/* ══════════ TOP NAV ══════════ */
+.top-nav {
+  position: sticky; top:0; z-index:200;
+  background: rgba(15,15,18,0.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  height: calc(var(--nav-h) + var(--safe-t));
+  padding-top: var(--safe-t);
+  display: flex; align-items: center;
+  padding-left: 18px; padding-right: 18px; gap: 12px;
+}
+.nav-wordmark {
+  font-family: var(--f-head);
+  font-size: 20px; font-weight: 800;
+  color: var(--t1); letter-spacing: -0.02em;
+}
+.nav-wordmark em { color: var(--accent); font-style:normal; }
+.nav-spacer { flex:1; }
+.nav-week-btn {
+  background: var(--s3); border: 1px solid var(--s4);
+  color: var(--t2); font-family: var(--f-body);
+  font-size: 13px; font-weight: 600;
+  padding: 7px 14px; border-radius: 20px; cursor:pointer;
+  transition: all 0.15s;
+}
+.nav-week-btn.open { background: var(--accent); border-color: var(--accent); color:#fff; }
+
+/* ══════════ WEEK DRAWER ══════════ */
+.week-drawer {
+  position:sticky; top: calc(var(--nav-h) + var(--safe-t)); z-index:190;
+  background: rgba(15,15,18,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  overflow-x: auto; scrollbar-width:none;
+  max-height:0; transition: max-height 0.22s ease;
+}
+.week-drawer::-webkit-scrollbar { display:none; }
+.week-drawer.open { max-height:58px; }
+.week-drawer-inner { display:flex; padding:9px 16px; gap:6px; min-width:max-content; }
+.wd-btn {
+  background: var(--s3); border: 1px solid var(--s4);
+  color: var(--t2); font-size:12px; font-weight:700;
+  padding: 6px 12px; border-radius:20px; cursor:pointer;
+  white-space:nowrap; transition:all 0.15s; flex-shrink:0;
+}
+.wd-btn:active { transform:scale(0.93); }
+.wd-btn.active { background: var(--accent); border-color:var(--accent); color:#fff; }
+.wd-phase { background:transparent; border-color: var(--s4); color:var(--t3); }
+.wd-phase.active { background:transparent; border-color:var(--z3); color:var(--z3); }
+.wd-sep { width:1px; background:var(--s4); margin:2px; flex-shrink:0; }
+
+/* ══════════ VIEWS ══════════ */
+.view { display:none; padding-bottom: calc(var(--tab-h) + 16px + var(--safe-b)); }
+.view.active { display:block; }
+
+/* ══════════ DASHBOARD HEADER ══════════ */
+.dash-header {
+  padding: 22px 18px 18px;
+  background: linear-gradient(180deg, var(--s1) 0%, var(--s0) 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.dash-eyebrow { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); margin-bottom:5px; }
+.dash-title { font-family:var(--f-head); font-size:42px; font-weight:800; letter-spacing:-0.03em; line-height:0.95; color:var(--t1); }
+.dash-title em { color:var(--accent); font-style:normal; }
+.dash-sub { font-size:14px; color:var(--t2); margin-top:10px; line-height:1.5; }
+
+/* Progress ring + stats row */
+.dash-body { display:grid; grid-template-columns:auto 1fr; gap:16px; margin-top:18px; align-items:center; }
+.progress-ring-wrap { position:relative; width:96px; height:96px; flex-shrink:0; }
+.progress-ring-wrap svg { transform:rotate(-90deg); }
+.pr-track { fill:none; stroke:var(--s3); stroke-width:7; }
+.pr-fill  { fill:none; stroke-width:7; stroke-linecap:round; transition: stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1); }
+.pr-label { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.pr-num  { font-family:var(--f-head); font-size:22px; font-weight:800; color:var(--t1); line-height:1; }
+.pr-sub  { font-size:10px; font-weight:600; color:var(--t2); letter-spacing:0.06em; margin-top:2px; }
+
+.dash-stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.ds-box { background:var(--s1); border:1px solid var(--s4); border-radius:var(--r-sm); padding:11px 13px; }
+.ds-label { font-size:10px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--t3); margin-bottom:3px; }
+.ds-val   { font-size:19px; font-weight:700; color:var(--t1); letter-spacing:-0.02em; }
+.ds-val.orange { color: var(--accent); }
+.ds-val.green  { color: var(--z2); }
+.ds-val.purple { color: var(--xp); }
+
+/* XP / Gamification strip */
+.xp-strip {
+  margin: 12px 18px 0;
+  background: linear-gradient(135deg, rgba(184,140,255,0.1), rgba(255,107,53,0.07));
+  border: 1px solid rgba(184,140,255,0.2);
+  border-radius: var(--r); padding: 12px 16px;
+  display: flex; align-items:center; gap:12px;
+}
+.xp-icon { font-size:22px; }
+.xp-text { flex:1; }
+.xp-title { font-size:13px; font-weight:700; color:var(--xp); }
+.xp-sub   { font-size:12px; color:var(--t2); margin-top:1px; }
+.xp-badge { font-size:11px; font-weight:800; color:var(--xp); background:rgba(184,140,255,0.15); padding:4px 10px; border-radius:20px; white-space:nowrap; }
+
+/* ══════════ ZONE LEGEND ══════════ */
+.zone-legend {
+  display:grid; grid-template-columns:repeat(5,1fr);
+  gap:6px; padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.zl-item { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.zl-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; }
+.zl-name { font-size:9px; font-weight:700; letter-spacing:0.05em; text-align:center; }
+.zl-bpm  { font-size:9px; color:var(--t3); text-align:center; line-height:1.3; }
+.zl-z1 { background: var(--z1); } .cn-z1 { color:var(--z1); }
+.zl-z2 { background: var(--z2); } .cn-z2 { color:var(--z2); }
+.zl-z3 { background: var(--z3); } .cn-z3 { color:var(--z3); }
+.zl-z4 { background: var(--z4); } .cn-z4 { color:var(--z4); }
+.zl-z5 { background: var(--z5); } .cn-z5 { color:var(--z5); }
+
+/* ══════════ PHASE HEADER ══════════ */
+.phase-hdr { display:flex; align-items:center; gap:10px; padding:18px 18px 10px; }
+.phase-chip {
+  font-size:11px; font-weight:800; letter-spacing:0.07em; text-transform:uppercase;
+  padding:4px 12px; border-radius:20px;
+}
+.pc-1 { background:rgba(255,107,53,0.18); color:var(--accent); }
+.pc-2 { background:rgba(255,140,66,0.13); color:var(--z4); border:1px solid rgba(255,140,66,0.25); }
+.pc-3 { background:var(--s3); color:var(--t2); border:1px solid var(--s4); }
+.phase-subtitle { font-size:13px; font-weight:600; color:var(--t2); }
+
+/* Coach callout */
+.coach-callout {
+  margin:0 14px 10px;
+  background:var(--s1); border:1px solid var(--s4);
+  border-left:3px solid var(--accent);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;
+  padding:13px 15px;
+  font-size:14px; color:var(--t2); line-height:1.65;
+}
+.coach-callout strong { color:var(--t1); font-weight:600; }
+
+/* ══════════ WEEK CARD ══════════ */
+.wk-card {
+  margin:0 14px 10px;
+  background:var(--s1); border:1px solid var(--s4);
+  border-radius:var(--r); overflow:hidden;
+  transition: border-color 0.2s;
+}
+.wk-card.hidden { display:none; }
+.wk-card.wk-done { border-color: rgba(61,201,122,0.35); }
+
+.wk-header {
+  display:flex; align-items:center; padding:15px 16px;
+  cursor:pointer; gap:13px; user-select:none;
+}
+.wk-header:active { background:var(--s2); }
+.wk-num {
+  font-family:var(--f-head); font-size:38px; font-weight:800;
+  color:var(--accent); letter-spacing:-0.03em; line-height:1;
+  min-width:50px;
+}
+.wk-num.done { color:var(--z2); }
+.wk-meta { flex:1; min-width:0; }
+.wk-phase-tag { font-size:10px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--t3); margin-bottom:3px; }
+.wk-title     { font-size:15px; font-weight:700; color:var(--t1); line-height:1.3; }
+.wk-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.wk-done-badge { font-size:10px; font-weight:800; color:var(--z2); background:rgba(61,201,122,0.12); padding:3px 9px; border-radius:20px; display:none; }
+.wk-done-badge.show { display:block; }
+.wk-chevron { font-size:13px; color:var(--t3); transition:transform 0.2s; }
+.wk-card.open .wk-chevron { transform:rotate(180deg); }
+.wk-body { display:none; }
+.wk-card.open .wk-body { display:block; }
+
+/* Session divider */
+.session-divider { height:1px; background:rgba(255,255,255,0.05); margin:0; }
+
+/* ══════════ SESSION BLOCK ══════════ */
+.sess-block { padding:16px; }
+.sess-top-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; }
+.sess-zone-bar {
+  width:4px; border-radius:2px; flex-shrink:0; margin-top:3px;
+  /* height set inline */
+}
+.sess-content { flex:1; min-width:0; }
+.sess-tag-row { display:flex; align-items:center; gap:7px; margin-bottom:6px; }
+.s-tag {
+  font-size:10px; font-weight:800; letter-spacing:0.09em; text-transform:uppercase;
+  padding:3px 9px; border-radius:20px;
+}
+.st-interval { background:rgba(255,107,53,0.15); color:var(--accent); }
+.st-long     { background:rgba(245,200,66,0.12); color:var(--z3); }
+.st-trial    { background:rgba(255,79,79,0.2);   color:var(--z5); }
+.sess-name { font-size:16px; font-weight:700; color:var(--t1); line-height:1.25; margin-bottom:8px; }
+.sess-desc { font-size:14px; color:var(--t2); line-height:1.65; margin-bottom:12px; }
+
+/* Zone pills */
+.zone-pills { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+.zpill {
+  display:flex; align-items:center; gap:5px;
+  font-size:12px; font-weight:700; padding:5px 11px; border-radius:20px;
+  border: 1px solid transparent;
+}
+.zpill-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.zpill-z1 { background:rgba(74,158,224,0.12); color:var(--z1); border-color:rgba(74,158,224,0.2); }
+.zpill-z1 .zpill-dot { background:var(--z1); }
+.zpill-z2 { background:rgba(61,201,122,0.12); color:var(--z2); border-color:rgba(61,201,122,0.2); }
+.zpill-z2 .zpill-dot { background:var(--z2); }
+.zpill-z3 { background:rgba(245,200,66,0.12); color:var(--z3); border-color:rgba(245,200,66,0.2); }
+.zpill-z3 .zpill-dot { background:var(--z3); }
+.zpill-z4 { background:rgba(255,140,66,0.12); color:var(--z4); border-color:rgba(255,140,66,0.2); }
+.zpill-z4 .zpill-dot { background:var(--z4); }
+.zpill-z5 { background:rgba(255,79,79,0.12); color:var(--z5); border-color:rgba(255,79,79,0.2); }
+.zpill-z5 .zpill-dot { background:var(--z5); }
+.zpill-pace { background:var(--s3); color:var(--t1); border-color:var(--s4); }
+
+/* Analytical breakdown */
+.analysis-box {
+  background:var(--s2); border:1px solid var(--s4);
+  border-radius:var(--r-sm); padding:13px 15px; margin-bottom:12px;
+}
+.analysis-title { font-size:11px; font-weight:800; letter-spacing:0.09em; text-transform:uppercase; color:var(--t3); margin-bottom:10px; }
+.analysis-row { display:flex; gap:8px; margin-bottom:8px; align-items:flex-start; }
+.analysis-row:last-child { margin-bottom:0; }
+.ar-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+.ar-text { font-size:13px; color:var(--t2); line-height:1.6; }
+.ar-text strong { color:var(--t1); font-weight:600; }
+.ar-text .cn-z2 { font-weight:700; }
+.ar-text .cn-z3 { font-weight:700; }
+.ar-text .cn-z4 { font-weight:700; }
+.ar-text .cn-z5 { font-weight:700; }
+
+/* Coach cue */
+.coach-cue {
+  background: rgba(255,107,53,0.06); border:1px solid rgba(255,107,53,0.15);
+  border-radius:var(--r-sm); padding:11px 13px; margin-bottom:13px;
+  font-size:13px; color:var(--t2); line-height:1.6; font-style:italic;
+}
+.coach-cue::before { content:'💬 '; }
+
+/* Log button */
+.log-btn {
+  display:flex; align-items:center; justify-content:center; gap:7px;
+  width:100%; padding:12px 16px;
+  background:var(--s0); border:1.5px dashed var(--s4);
+  border-radius:var(--r-sm); cursor:pointer;
+  font-size:13px; font-weight:700; color:var(--t3);
+  transition:all 0.15s;
+}
+.log-btn:active { background:var(--s2); }
+.log-btn.logged { border-style:solid; border-color:var(--z2); color:var(--z2); background:rgba(61,201,122,0.06); }
+.log-btn.logged::before { content:'✓  '; }
+
+/* ══════════ INLINE LOG FORM ══════════ */
+.ilf {
+  background:var(--s2); border-top:1px solid rgba(255,255,255,0.05);
+  padding:18px 16px; display:none;
+}
+.ilf.open { display:block; }
+.ilf-heading { font-size:13px; font-weight:800; letter-spacing:0.07em; text-transform:uppercase; color:var(--t2); margin-bottom:16px; }
+.ilf-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.ilf-field { display:flex; flex-direction:column; gap:5px; }
+.ilf-field.full { grid-column:span 2; }
+.ilf-label { font-size:10px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; color:var(--t3); }
+.ilf-input {
+  background:var(--s1); border:1px solid var(--s4);
+  color:var(--t1); font-family:var(--f-body); font-size:15px; font-weight:500;
+  padding:11px 13px; border-radius:var(--r-sm); width:100%; outline:none;
+  transition:border-color 0.15s; -webkit-appearance:none; appearance:none;
+}
+.ilf-input:focus { border-color:var(--accent); }
+.ilf-input::placeholder { color:var(--t3); }
+.ilf-select { cursor:pointer; }
+.ilf-textarea { min-height:78px; resize:none; line-height:1.6; font-size:14px; }
+
+/* RPE slider */
+.rpe-row { display:flex; align-items:center; gap:13px; margin-bottom:10px; }
+.rpe-track {
+  flex:1; -webkit-appearance:none; appearance:none;
+  height:5px; border-radius:3px; outline:none; cursor:pointer;
+  background: linear-gradient(90deg, var(--z1) 0%, var(--z2) 20%, var(--z3) 40%, var(--z4) 70%, var(--z5) 100%);
+}
+.rpe-track::-webkit-slider-thumb {
+  -webkit-appearance:none; width:22px; height:22px;
+  border-radius:50%; background:#fff; cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);
+}
+.rpe-display { text-align:center; min-width:48px; }
+.rpe-num { font-family:var(--f-head); font-size:28px; font-weight:800; color:var(--accent); line-height:1; }
+.rpe-lbl { font-size:10px; color:var(--t3); font-weight:600; margin-top:2px; }
+
+.ilf-save { width:100%; padding:14px; background:var(--accent); border:none; color:#fff; font-family:var(--f-body); font-size:15px; font-weight:800; border-radius:var(--r-sm); cursor:pointer; margin-top:6px; transition:background 0.15s; letter-spacing:0.02em; }
+.ilf-save:active { background:#d9522a; }
+.ilf-cancel { width:100%; padding:10px; background:none; border:none; color:var(--t3); font-family:var(--f-body); font-size:13px; font-weight:600; cursor:pointer; margin-top:4px; }
+
+/* ══════════ LOG VIEW ══════════ */
+.log-top {
+  padding:22px 18px 16px;
+  background:var(--s1); border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.log-top-title { font-family:var(--f-head); font-size:34px; font-weight:800; letter-spacing:-0.03em; }
+.log-top-sub   { font-size:13px; color:var(--t2); margin-top:4px; }
+
+/* Progress summary */
+.log-progress-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.05); }
+.lpg-box { background:var(--s1); border:1px solid var(--s4); border-radius:var(--r-sm); padding:12px; text-align:center; }
+.lpg-val   { font-family:var(--f-head); font-size:26px; font-weight:800; color:var(--accent); letter-spacing:-0.02em; }
+.lpg-label { font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--t3); margin-top:3px; }
+
+/* Week progress bar */
+.wk-progress-strip { padding:12px 18px; border-bottom:1px solid rgba(255,255,255,0.05); }
+.wps-label { font-size:11px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--t3); margin-bottom:8px; }
+.wps-dots { display:flex; gap:5px; }
+.wps-dot { flex:1; height:5px; border-radius:3px; background:var(--s3); transition:background 0.3s; }
+.wps-dot.done   { background:var(--z2); }
+.wps-dot.active { background:var(--accent); }
+
+/* Achievement shelf */
+.achievement-shelf { padding:14px 18px; border-bottom:1px solid rgba(255,255,255,0.05); }
+.ach-title { font-size:12px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:var(--xp); margin-bottom:10px; }
+.ach-row { display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; }
+.ach-row::-webkit-scrollbar { display:none; }
+.ach-badge {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  background:var(--s1); border:1px solid rgba(184,140,255,0.2);
+  border-radius:var(--r-sm); padding:10px 12px; flex-shrink:0; min-width:68px;
+  transition: all 0.2s;
+}
+.ach-badge.earned { background:rgba(184,140,255,0.1); border-color:rgba(184,140,255,0.4); }
+.ach-badge.locked { opacity:0.35; }
+.ach-icon { font-size:24px; }
+.ach-name { font-size:10px; font-weight:700; color:var(--t2); text-align:center; line-height:1.3; }
+
+/* Log filter + list */
+.log-filter-row { display:flex; align-items:center; justify-content:space-between; padding:13px 18px; border-bottom:1px solid rgba(255,255,255,0.05); }
+.lf-title { font-size:15px; font-weight:700; color:var(--t1); }
+.lf-select { background:var(--s3); border:1px solid var(--s4); color:var(--t2); font-family:var(--f-body); font-size:12px; font-weight:700; padding:6px 11px; border-radius:20px; cursor:pointer; outline:none; -webkit-appearance:none; }
+
+.entry-card { margin:8px 14px; background:var(--s1); border:1px solid var(--s4); border-radius:var(--r); overflow:hidden; }
+.entry-card-hdr { display:flex; align-items:flex-start; justify-content:space-between; padding:14px 15px; cursor:pointer; gap:10px; }
+.entry-card-hdr:active { background:var(--s2); }
+.ec-left { flex:1; min-width:0; }
+.ec-chips { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:5px; }
+.ec-date { font-size:11px; font-weight:600; color:var(--t3); }
+.ec-wk-chip { font-size:10px; font-weight:800; background:var(--s3); color:var(--t3); padding:2px 8px; border-radius:20px; }
+.ec-type-chip { font-size:10px; font-weight:800; padding:2px 8px; border-radius:20px; }
+.ect-interval { background:rgba(255,107,53,0.15); color:var(--accent); }
+.ect-long     { background:rgba(245,200,66,0.12); color:var(--z3); }
+.ect-trial    { background:rgba(255,79,79,0.2);   color:var(--z5); }
+.ect-other    { background:var(--s3); color:var(--t3); }
+.ec-name { font-size:15px; font-weight:700; color:var(--t1); }
+.ec-right { display:flex; gap:8px; align-items:center; flex-shrink:0; }
+.ec-chevron { font-size:12px; color:var(--t3); transition:transform 0.2s; }
+.entry-card.open .ec-chevron { transform:rotate(180deg); }
+.ec-del { background:none; border:none; color:var(--t3); font-size:15px; cursor:pointer; padding:2px; transition:color 0.15s; }
+.ec-del:active { color:var(--z5); }
+
+.entry-body { display:none; border-top:1px solid rgba(255,255,255,0.05); padding:14px 15px; }
+.entry-card.open .entry-body { display:block; }
+.entry-stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:12px; }
+.esb { background:var(--s0); border:1px solid var(--s4); border-radius:var(--r-sm); padding:10px 12px; }
+.esb-l { font-size:10px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--t3); margin-bottom:2px; }
+.esb-v { font-size:16px; font-weight:700; color:var(--t1); }
+.esb-v.gold   { color:var(--z3); }
+.esb-v.orange { color:var(--accent); }
+.esb-v.red    { color:var(--z5); }
+.esb-v.green  { color:var(--z2); }
+.entry-notes { font-size:13px; color:var(--t2); line-height:1.65; border-left:2px solid var(--s4); padding-left:12px; }
+
+/* Empty state */
+.empty-state { text-align:center; padding:48px 24px; color:var(--t3); font-size:14px; }
+.empty-icon { font-size:40px; margin-bottom:14px; }
+
+/* Export */
+.export-card { margin:16px 14px; background:var(--s1); border:1px solid var(--s4); border-radius:var(--r); padding:20px; }
+.export-title { font-size:16px; font-weight:700; color:var(--t1); margin-bottom:6px; }
+.export-desc  { font-size:14px; color:var(--t2); line-height:1.6; margin-bottom:16px; }
+.export-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:var(--z2); border:none; color:#0d1a0d; font-family:var(--f-body); font-size:15px; font-weight:800; border-radius:var(--r-sm); cursor:pointer; margin-bottom:8px; transition:background 0.15s; }
+.export-btn:active { background:#2eaa5f; }
+.export-btn-sec { background:var(--s3); color:var(--t2); border:1px solid var(--s4); border-radius:var(--r-sm); }
+
+/* ══════════ BOTTOM TABS ══════════ */
+.bottom-tabs {
+  position:fixed; bottom:0; left:0; right:0; z-index:200;
+  background:rgba(15,15,18,0.94);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid rgba(255,255,255,0.06);
+  display:flex;
+  padding-bottom:var(--safe-b);
+  height:calc(var(--tab-h) + var(--safe-b));
+}
+.tab-btn { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding:8px 4px; background:none; border:none; cursor:pointer; color:var(--t3); font-family:var(--f-body); font-size:10px; font-weight:700; letter-spacing:0.04em; transition:color 0.15s; }
+.tab-btn.active { color:var(--accent); }
+.tab-btn:active { opacity:0.7; }
+.tab-icon { font-size:21px; line-height:1; }
+
+/* ══════════ INSTALL BANNER ══════════ */
+.install-banner { background:var(--s2); border-bottom:1px solid rgba(255,255,255,0.06); padding:11px 16px; display:flex; align-items:center; gap:12px; }
+.ib-text { flex:1; font-size:13px; color:var(--t2); line-height:1.4; }
+.ib-text strong { color:var(--t1); font-weight:700; }
+.ib-close { background:none; border:none; color:var(--t3); font-size:18px; cursor:pointer; flex-shrink:0; }
+
+/* ══════════ VIEW FOOTER ══════════ */
+.vf { padding:20px 18px; font-size:11px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--t3); border-top:1px solid rgba(255,255,255,0.05); margin-top:20px; }
+
+/* Misc */
+.mt8 { margin-top:8px; }
+</style>
+</head>
+<body>
+
+<!-- SAVE BANNER -->
+<div class="install-banner" id="installBanner" style="flex-direction:column;gap:10px;padding:14px 16px;">
+  <div style="display:flex;align-items:center;gap:12px;width:100%;">
+    <div style="font-size:22px">📲</div>
+    <div class="ib-text"><strong>Save this app to your iPhone</strong><br>Step 1: Download the file below</div>
+    <button class="ib-close" onclick="dismissBanner()">✕</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;">
+    <button onclick="downloadSelf()" style="background:var(--accent);border:none;color:#fff;font-family:var(--f-body);font-size:13px;font-weight:700;padding:10px 12px;border-radius:10px;cursor:pointer;">
+      ⬇ Download File
+    </button>
+    <button onclick="showInstructions()" style="background:var(--s3);border:1px solid var(--s4);color:var(--t2);font-family:var(--f-body);font-size:13px;font-weight:700;padding:10px 12px;border-radius:10px;cursor:pointer;">
+      📋 How to install
+    </button>
+  </div>
+  <div id="installSteps" style="display:none;background:var(--s3);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--t2);line-height:1.8;width:100%;">
+    <strong style="color:var(--t1);">After downloading:</strong><br>
+    1. Open the <strong style="color:var(--t1);">Files app</strong> → Downloads<br>
+    2. Tap the file to open it in <strong style="color:var(--t1);">Safari</strong><br>
+    3. Tap the <strong style="color:var(--t1);">Share button</strong> (box with arrow ↑)<br>
+    4. Tap <strong style="color:var(--t1);">Add to Home Screen</strong> → Add<br>
+    <span style="color:var(--z2);">✓ Done — opens like a native app</span>
+  </div>
+</div>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-wordmark">Sub-<em>25</em></div>
+  <div class="nav-spacer"></div>
+  <button class="nav-week-btn" id="wkJumpBtn" onclick="toggleWeekJump()">Jump to Week ▾</button>
+</div>
+
+<!-- WEEK JUMP DRAWER -->
+<div class="week-drawer" id="wkDrawer">
+  <div class="week-drawer-inner">
+    <button class="wd-btn active" onclick="jumpWeek('all',this)">All</button>
+    <button class="wd-btn" onclick="jumpWeek('1',this)">W1</button>
+    <button class="wd-btn" onclick="jumpWeek('2',this)">W2</button>
+    <button class="wd-btn" onclick="jumpWeek('3',this)">W3</button>
+    <button class="wd-btn" onclick="jumpWeek('4',this)">W4</button>
+    <button class="wd-btn" onclick="jumpWeek('5',this)">W5</button>
+    <button class="wd-btn" onclick="jumpWeek('6',this)">W6</button>
+    <button class="wd-btn" onclick="jumpWeek('7',this)">W7</button>
+    <button class="wd-btn" onclick="jumpWeek('8',this)">W8</button>
+    <button class="wd-btn" onclick="jumpWeek('9',this)">W9</button>
+    <button class="wd-btn" onclick="jumpWeek('10',this)">W10</button>
+    <div class="wd-sep"></div>
+    <button class="wd-btn wd-phase" onclick="jumpWeek('p1',this)">P1</button>
+    <button class="wd-btn wd-phase" onclick="jumpWeek('p2',this)">P2</button>
+    <button class="wd-btn wd-phase" onclick="jumpWeek('p3',this)">P3</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════
+     VIEW: PROGRAM
+═══════════════════════════ -->
+<div class="view active" id="view-program">
+
+  <div class="dash-header">
+    <div class="dash-eyebrow">10-Week Program · Started Mar 21, 2026</div>
+    <div class="dash-title">Sub-<em>25</em><br>Pathway</div>
+    <div class="dash-sub">27:11 → Sub-26:30 → Sub-25:00</div>
+    <div class="dash-body">
+      <div class="progress-ring-wrap">
+        <svg width="96" height="96" viewBox="0 0 96 96">
+          <circle class="pr-track" cx="48" cy="48" r="40"/>
+          <circle class="pr-fill" id="prFill" cx="48" cy="48" r="40"
+            stroke="var(--accent)"
+            stroke-dasharray="251.2"
+            stroke-dashoffset="251.2"/>
+        </svg>
+        <div class="pr-label">
+          <div class="pr-num" id="prNum">0%</div>
+          <div class="pr-sub">DONE</div>
+        </div>
+      </div>
+      <div class="dash-stats">
+        <div class="ds-box"><div class="ds-label">Sessions</div><div class="ds-val orange" id="ds-sessions">0</div></div>
+        <div class="ds-box"><div class="ds-label">Best Pace</div><div class="ds-val" id="ds-best">—</div></div>
+        <div class="ds-box"><div class="ds-label">XP Earned</div><div class="ds-val purple" id="ds-xp">0</div></div>
+        <div class="ds-box"><div class="ds-label">Wks Logged</div><div class="ds-val green" id="ds-wks">0 / 10</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- XP STRIP -->
+  <div class="xp-strip" id="xpStrip">
+    <div class="xp-icon">⚡</div>
+    <div class="xp-text">
+      <div class="xp-title" id="xpTitle">Start your journey</div>
+      <div class="xp-sub" id="xpSub">Log your first session to earn XP and unlock badges</div>
+    </div>
+    <div class="xp-badge" id="xpBadge">Lvl 1</div>
+  </div>
+
+  <!-- ZONE LEGEND -->
+  <div class="zone-legend">
+    <div class="zl-item"><div class="zl-dot zl-z1">1</div><div class="zl-name cn-z1">Recovery</div><div class="zl-bpm">&lt;113</div></div>
+    <div class="zl-item"><div class="zl-dot zl-z2">2</div><div class="zl-name cn-z2">Aerobic</div><div class="zl-bpm">113–151</div></div>
+    <div class="zl-item"><div class="zl-dot zl-z3">3</div><div class="zl-name cn-z3">Tempo</div><div class="zl-bpm">151–170</div></div>
+    <div class="zl-item"><div class="zl-dot zl-z4">4</div><div class="zl-name cn-z4">Threshold</div><div class="zl-bpm">170–180</div></div>
+    <div class="zl-item"><div class="zl-dot zl-z5">5</div><div class="zl-name cn-z5">Max</div><div class="zl-bpm">180–189</div></div>
+  </div>
+
+  <!-- ─── PHASE 1 ─── -->
+  <div class="phase-hdr">
+    <span class="phase-chip pc-1">Phase 1</span>
+    <span class="phase-subtitle">Threshold Foundation · Weeks 1–3</span>
+  </div>
+  <div class="coach-callout">
+    <strong>Objective:</strong> Re-establish threshold tolerance after the time trial. Intervals sit just below race pace to accumulate quality stimulus without taxing the hamstrings. Long runs build your <span class="cn-z2">Z2 aerobic base</span> and fat oxidation efficiency — the foundation everything else is built on.
+  </div>
+
+  <!-- WEEK 1 -->
+  <div class="wk-card" data-week="1" data-phase="p1" id="wk1">
+    <div class="wk-header" onclick="toggleWk(1)">
+      <div class="wk-num" id="wknum1">01</div>
+      <div class="wk-meta">
+        <div class="wk-phase-tag">Phase 1 · Foundation</div>
+        <div class="wk-title">Cruise Repeats + Easy Base</div>
+      </div>
+      <div class="wk-right">
+        <div class="wk-done-badge" id="wkbadge1">✓ Done</div>
+        <div class="wk-chevron">▾</div>
+      </div>
+    </div>
+    <div class="wk-body" id="wkbody1">
+      <!-- SESSION A: Interval -->
+      <div class="sess-block">
+        <div class="sess-top-row">
+          <div class="sess-zone-bar" style="background:var(--z3);height:60px;"></div>
+          <div class="sess-content">
+            <div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div>
+            <div class="sess-name">Cruise Repeats</div>
+          </div>
+        </div>
+        <div class="sess-desc">5 × 5 min @ threshold pace — 90 sec walk recovery between reps. Start conservative and dial in your effort through the first two reps before committing to the pace.</div>
+        <div class="zone-pills">
+          <span class="zpill zpill-z3"><span class="zpill-dot"></span>Z3 Target Zone</span>
+          <span class="zpill zpill-pace">5:20–5:30 /km</span>
+          <span class="zpill zpill-z3"><span class="zpill-dot"></span>155–168 bpm</span>
+        </div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">🔁</span><div class="ar-text"><strong>Why 5 × 5 min:</strong> 25 total minutes of threshold stimulus. Research shows this rep structure allows full recovery between bouts while maximising time-in-zone. You're accumulating quality, not just volume.</div></div>
+          <div class="analysis-row"><span class="ar-icon">❤️</span><div class="ar-text"><strong>Zone target (<span class="cn-z3">Z3, 155–168 bpm</span>):</strong> Your cruise pace of 6:44 already sits at the Z2/Z3 border. These reps push you 8–15 bpm higher to stimulate threshold adaptation without crossing into the <span class="cn-z4">Z4</span> lactate accumulation zone.</div></div>
+          <div class="analysis-row"><span class="ar-icon">📈</span><div class="ar-text"><strong>Adaptation goal:</strong> Raise your lactate threshold pace — the speed at which lactate production exceeds clearance. Currently ~5:26 /km (your TT pace). Target is 5:10 /km by Week 7.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🦵</span><div class="ar-text"><strong>Hamstring note:</strong> The 90-sec walk recovery (not jog) is deliberate — it allows full eccentric load dissipation between reps and keeps hamstring stress low this early in the block.</div></div>
+        </div>
+        <div class="coach-cue">Lock the effort by HR, not speed. If the treadmill is set to 11.2 km/h but your HR is at 175+, ease to 10.9. The HR zone is the session — the pace number is just a guide.</div>
+        <button class="log-btn" id="logbtn-1-Interval" onclick="openLog(1,'Interval','Cruise Repeats')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <!-- SESSION B: Long -->
+      <div class="sess-block">
+        <div class="sess-top-row">
+          <div class="sess-zone-bar" style="background:var(--z2);height:60px;"></div>
+          <div class="sess-content">
+            <div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div>
+            <div class="sess-name">Easy Aerobic Base</div>
+          </div>
+        </div>
+        <div class="sess-desc">7 km steady, fully conversational. No HR spikes permitted. Treadmill 1.0% incline throughout.</div>
+        <div class="zone-pills">
+          <span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2 Aerobic</span>
+          <span class="zpill zpill-pace">6:40–7:00 /km</span>
+          <span class="zpill zpill-z2"><span class="zpill-dot"></span>140–155 bpm</span>
+        </div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">🔥</span><div class="ar-text"><strong>Why pure <span class="cn-z2">Z2</span>:</strong> Z2 training maximises mitochondrial density and fat oxidation — the metabolic engine that powers every long race. Your body learns to spare glycogen by burning fat at faster paces. This is the unglamorous work that separates good race engines from great ones.</div></div>
+          <div class="analysis-row"><span class="ar-icon">♻️</span><div class="ar-text"><strong>Recovery function:</strong> After the time trial, muscle damage is still being repaired. Z2 running increases blood flow to facilitate this repair without adding new stress. Think of it as active maintenance, not training.</div></div>
+          <div class="analysis-row"><span class="ar-icon">💬</span><div class="ar-text"><strong>Conversational test:</strong> You should be able to speak full sentences without gasping. If you can't, you're in Z3. Slow down — there's no ego in getting this right.</div></div>
+        </div>
+        <div class="coach-cue">If 7 km feels too easy — good. That's correct. The aerobic base you build here is what allows you to sustain Z4 pace for 5 km in Week 10.</div>
+        <button class="log-btn" id="logbtn-1-Long Run" onclick="openLog(1,'Long Run','Easy Aerobic Base')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-1"></div>
+    </div>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="wk-card" data-week="2" data-phase="p1" id="wk2">
+    <div class="wk-header" onclick="toggleWk(2)">
+      <div class="wk-num" id="wknum2">02</div>
+      <div class="wk-meta">
+        <div class="wk-phase-tag">Phase 1 · Foundation</div>
+        <div class="wk-title">Threshold Ladder + Progressive Long</div>
+      </div>
+      <div class="wk-right">
+        <div class="wk-done-badge" id="wkbadge2">✓ Done</div>
+        <div class="wk-chevron">▾</div>
+      </div>
+    </div>
+    <div class="wk-body" id="wkbody2">
+      <div class="sess-block">
+        <div class="sess-top-row">
+          <div class="sess-zone-bar" style="background:linear-gradient(180deg,var(--z4),var(--z3));height:60px;"></div>
+          <div class="sess-content">
+            <div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div>
+            <div class="sess-name">Threshold Ladder</div>
+          </div>
+        </div>
+        <div class="sess-desc">3 min / 5 min / 7 min / 5 min / 3 min @ 5:15–5:25 /km. 90 sec jog recovery between each rep. The pyramid structure builds to the hardest rep then descends.</div>
+        <div class="zone-pills">
+          <span class="zpill zpill-z3"><span class="zpill-dot"></span>Z3 base</span>
+          <span class="zpill zpill-z4"><span class="zpill-dot"></span>Z4 peak</span>
+          <span class="zpill zpill-pace">5:15–5:25 /km</span>
+          <span class="zpill zpill-z3"><span class="zpill-dot"></span>160–172 bpm</span>
+        </div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">🪜</span><div class="ar-text"><strong>Why a ladder:</strong> Pyramiding the rep length (3-5-7-5-3) is a classic structure because fatigue accumulates naturally. The 7-min centre rep is your biggest threshold challenge — approached when reasonably fresh, followed by shorter reps that maintain pace as fatigue increases.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🔄</span><div class="ar-text"><strong>Jog vs walk recovery:</strong> Switching from walk (Week 1) to jog recovery is significant. Jogging keeps lactate clearance active and teaches your body to run while already moderately fatigued — more race-specific than standing rest.</div></div>
+          <div class="analysis-row"><span class="ar-icon">📉</span><div class="ar-text"><strong>Pace tightens:</strong> 5:15–5:25 vs 5:20–5:30 last week. A 5 sec/km improvement reflects the threshold stimulus from Week 1 beginning to translate. This is intentional progressive overload.</div></div>
+        </div>
+        <div class="coach-cue">Volume stays the same this week — only the longest rep increases. Save yourself for the 7-min rep. If you're fading badly on the back half of the pyramid, you went too hard in the first 3-min.</div>
+        <button class="log-btn" id="logbtn-2-Interval" onclick="openLog(2,'Interval','Threshold Ladder')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row">
+          <div class="sess-zone-bar" style="background:linear-gradient(180deg,var(--z3),var(--z2));height:60px;"></div>
+          <div class="sess-content">
+            <div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div>
+            <div class="sess-name">Progressive Long Run</div>
+          </div>
+        </div>
+        <div class="sess-desc">7.5 km. First 5 km easy Z2, final 2.5 km drop to 6:10–6:20 /km (low Z3).</div>
+        <div class="zone-pills">
+          <span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2 → Z3</span>
+          <span class="zpill zpill-pace">6:40 → 6:15 /km</span>
+        </div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">📈</span><div class="ar-text"><strong>Progressive structure:</strong> Starting easy and ending faster teaches your body to run at tempo pace with glycogen already partially depleted — the exact metabolic state you'll be in at KM 3.5 of your time trial.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🎯</span><div class="ar-text"><strong>The final 2.5 km:</strong> 6:10–6:20 /km at the end of a 7.5 km run is harder than the same pace on fresh legs. This deliberate fatigue-state exposure builds mental and physiological resilience for the closing kms of a race.</div></div>
+        </div>
+        <div class="coach-cue">Finish feeling like you had 1 km left in the tank. If you finish the last 2.5 km and immediately feel you could have gone faster — that's exactly right. Save the gas for the interval session.</div>
+        <button class="log-btn" id="logbtn-2-Long Run" onclick="openLog(2,'Long Run','Progressive Long Run')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-2"></div>
+    </div>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="wk-card" data-week="3" data-phase="p1" id="wk3">
+    <div class="wk-header" onclick="toggleWk(3)">
+      <div class="wk-num" id="wknum3">03</div>
+      <div class="wk-meta">
+        <div class="wk-phase-tag">Phase 1 · Foundation</div>
+        <div class="wk-title">Sustained Threshold + Steady Long</div>
+      </div>
+      <div class="wk-right">
+        <div class="wk-done-badge" id="wkbadge3">✓ Done</div>
+        <div class="wk-chevron">▾</div>
+      </div>
+    </div>
+    <div class="wk-body" id="wkbody3">
+      <div class="sess-block">
+        <div class="sess-top-row">
+          <div class="sess-zone-bar" style="background:var(--z4);height:60px;"></div>
+          <div class="sess-content">
+            <div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div>
+            <div class="sess-name">Sustained Threshold Block</div>
+          </div>
+        </div>
+        <div class="sess-desc">2 × 12 min @ 5:15 /km with 2 min jog recovery. The longest continuous threshold effort of Phase 1.</div>
+        <div class="zone-pills">
+          <span class="zpill zpill-z4"><span class="zpill-dot"></span>Z3–Z4</span>
+          <span class="zpill zpill-pace">5:10–5:20 /km</span>
+          <span class="zpill zpill-z4"><span class="zpill-dot"></span>162–174 bpm</span>
+        </div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">⏱️</span><div class="ar-text"><strong>Why 12 minutes:</strong> 12 continuous minutes at threshold is the physiological sweet spot — long enough to drive meaningful lactate threshold adaptation, short enough to repeat twice with quality. Studies by Jack Daniels show 10–20 min continuous threshold reps produce the most efficient LT gains per session.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🧪</span><div class="ar-text"><strong>Lactate dynamics:</strong> At <span class="cn-z4">Z4</span> (170–174 bpm), you're working right at maximal lactate steady state (MLSS). Sustaining this for 12 min teaches your body to clear lactate at rates approaching production — the defining adaptation of a faster 5K runner.</div></div>
+          <div class="analysis-row"><span class="ar-icon">⚠️</span><div class="ar-text"><strong>HR guardrail:</strong> If HR exceeds 175 before the 12-min bell, ease 5 sec/km. Above 175 you've crossed into <span class="cn-z5">Z5</span> — the session becomes a different stimulus entirely and the second rep is compromised.</div></div>
+        </div>
+        <div class="coach-cue">The 2-min jog recovery between reps is not rest — it's active recovery. Keep moving at 7:00–7:30 /km. Stopping completely resets your thermoregulatory and cardiovascular state and makes rep 2 harder than it should be.</div>
+        <button class="log-btn" id="logbtn-3-Interval" onclick="openLog(3,'Interval','Sustained Threshold Block')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row">
+          <div class="sess-zone-bar" style="background:var(--z2);height:60px;"></div>
+          <div class="sess-content">
+            <div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div>
+            <div class="sess-name">Steady State Long</div>
+          </div>
+        </div>
+        <div class="sess-desc">8 km @ comfortable Z2. Consistent effort, not split-chasing. Lock to HR.</div>
+        <div class="zone-pills">
+          <span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2 Aerobic</span>
+          <span class="zpill zpill-pace">6:35–6:50 /km</span>
+          <span class="zpill zpill-z2"><span class="zpill-dot"></span>142–157 bpm</span>
+        </div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">🏔️</span><div class="ar-text"><strong>Building the aerobic ceiling:</strong> 8 km of Z2 work at this stage is meaningful base volume. Each km adds mitochondrial density to your slow-twitch fibres — the cells that will carry you through the first 3 km of your time trial with controlled HR.</div></div>
+          <div class="analysis-row"><span class="ar-icon">📊</span><div class="ar-text"><strong>Your aerobic efficiency data:</strong> At 150–157 bpm you're currently running 6:44 /km. The goal of this phase is to push that to 6:20–6:30 /km at the same HR by Week 7 — a direct indicator of improving aerobic fitness.</div></div>
+        </div>
+        <div class="coach-cue">Your long run is your aerobic investment. Every easy km here pays dividends in Weeks 7–10. Don't skip it for short-term speed gains — the data consistently shows that runners who skip easy volume peak early and fade in competition.</div>
+        <button class="log-btn" id="logbtn-3-Long Run" onclick="openLog(3,'Long Run','Steady State Long')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-3"></div>
+    </div>
+  </div>
+
+  <!-- ─── PHASE 2 ─── -->
+  <div class="phase-hdr" style="margin-top:8px;">
+    <span class="phase-chip pc-2">Phase 2</span>
+    <span class="phase-subtitle">Speed Development · Weeks 4–7</span>
+  </div>
+  <div class="coach-callout">
+    <strong>Objective:</strong> Push race pace toward 5:10–5:15 /km. Introduce controlled <span class="cn-z4">Z4–Z5</span> speed work. Long runs extend to 9–10 km to raise the aerobic ceiling. This is where your engine advantage gets converted into tangible pace gains.
+  </div>
+
+  <!-- WEEKS 4–7 CONDENSED (same structure, less repetition for brevity) -->
+
+  <!-- WEEK 4 -->
+  <div class="wk-card" data-week="4" data-phase="p2" id="wk4">
+    <div class="wk-header" onclick="toggleWk(4)">
+      <div class="wk-num" id="wknum4">04</div>
+      <div class="wk-meta"><div class="wk-phase-tag">Phase 2 · Speed</div><div class="wk-title">1K Repeats + Base Extension</div></div>
+      <div class="wk-right"><div class="wk-done-badge" id="wkbadge4">✓ Done</div><div class="wk-chevron">▾</div></div>
+    </div>
+    <div class="wk-body" id="wkbody4">
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z4);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div><div class="sess-name">1K Repeats</div></div></div>
+        <div class="sess-desc">5 × 1 km @ 5:05–5:10 /km. 90 sec standing rest between reps. Full recovery — don't rush the rest.</div>
+        <div class="zone-pills"><span class="zpill zpill-z4"><span class="zpill-dot"></span>Z4</span><span class="zpill zpill-pace">5:05–5:10 /km</span><span class="zpill zpill-z4"><span class="zpill-dot"></span>170–178 bpm</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">🎯</span><div class="ar-text"><strong>Format shift:</strong> Moving from time-based (5 min) to distance-based (1 km) reps is intentional. It teaches pace awareness rather than effort awareness — crucial for race execution where you'll be monitoring splits, not HR.</div></div>
+          <div class="analysis-row"><span class="ar-icon">❤️</span><div class="ar-text"><strong>Entering <span class="cn-z4">Z4</span>:</strong> At 170–178 bpm you're above lactate threshold. Each rep creates a lactate spike — the rest clears it. This "lactate flushing" mechanism trains your clearance pathway to be more efficient over time, raising your effective threshold pace.</div></div>
+          <div class="analysis-row"><span class="ar-icon">⚖️</span><div class="ar-text"><strong>Even-split test:</strong> All 5 reps should feel identical in effort. Rep 1 hard = Reps 4–5 impossible. Start at 5:10, not 5:05. The target is controlled uniformity — race pace is not a sprint.</div></div>
+        </div>
+        <div class="coach-cue">Each km should feel the same effort level. If rep 4 is noticeably harder than rep 1, you went out too fast. Consistency across all reps is the diagnostic — it tells you whether the pace is sustainable on race day.</div>
+        <button class="log-btn" id="logbtn-4-Interval" onclick="openLog(4,'Interval','1K Repeats')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z2);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div><div class="sess-name">Base Extension</div></div></div>
+        <div class="sess-desc">8.5 km fully aerobic. No pace pressure. The week's primary leg stress is in the interval session.</div>
+        <div class="zone-pills"><span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2</span><span class="zpill zpill-pace">6:40–7:00 /km</span></div>
+        <div class="coach-cue">Protect the hamstrings after 1K repeats. Easy is correct here. Your perceived exertion should never exceed 4/10. This run is aerobic maintenance — treat it like a walk with a slight upgrade.</div>
+        <button class="log-btn" id="logbtn-4-Long Run" onclick="openLog(4,'Long Run','Base Extension')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-4"></div>
+    </div>
+  </div>
+
+  <!-- WEEK 5 -->
+  <div class="wk-card" data-week="5" data-phase="p2" id="wk5">
+    <div class="wk-header" onclick="toggleWk(5)">
+      <div class="wk-num" id="wknum5">05</div>
+      <div class="wk-meta"><div class="wk-phase-tag">Phase 2 · Speed</div><div class="wk-title">Mixed Ladder + 9K Progressive</div></div>
+      <div class="wk-right"><div class="wk-done-badge" id="wkbadge5">✓ Done</div><div class="wk-chevron">▾</div></div>
+    </div>
+    <div class="wk-body" id="wkbody5">
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:linear-gradient(180deg,var(--z5),var(--z4));height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div><div class="sess-name">Mixed Pace Ladder</div></div></div>
+        <div class="sess-desc">400m @ 4:50 · 800m @ 5:05 · 1200m @ 5:10 · 800m @ 5:05 · 400m @ 4:50 /km. 90 sec rest each.</div>
+        <div class="zone-pills"><span class="zpill zpill-z5"><span class="zpill-dot"></span>Z5 on 400s</span><span class="zpill zpill-z4"><span class="zpill-dot"></span>Z4 on 1200m</span><span class="zpill zpill-pace">4:50–5:10 /km</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">⚡</span><div class="ar-text"><strong>Sub-5:00 introduction:</strong> The 400m reps at 4:50 /km are your first controlled exposure to sub-5:00 pace. This is neurological training — teaching your stride mechanics and fast-twitch recruitment to fire at a higher cadence. It's also a confidence signal: you are faster than your current 5K time suggests.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🧠</span><div class="ar-text"><strong>Mixed pace physiology:</strong> Alternating between <span class="cn-z5">Z5</span> (400s) and <span class="cn-z4">Z4</span> (1200m) teaches your lactate system to shift gears mid-session. This mimics the physiological demands of surging past a competitor or attacking a hill in a race.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🦵</span><div class="ar-text"><strong>Hamstring flag:</strong> Week 5 is a sprint-pace week. If you feel tightness above 2/10 on any 400m rep, complete the rep, then convert the session to a comfortable 6 km Z2 run. Don't push through early warning signs at this pace.</div></div>
+        </div>
+        <div class="coach-cue">This is not a time trial. You're making contact with sub-5:00 pace in a controlled environment. If the 400s feel genuinely easy, resist the urge to go faster — save that gear for race day.</div>
+        <button class="log-btn" id="logbtn-5-Interval" onclick="openLog(5,'Interval','Mixed Pace Ladder')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:linear-gradient(180deg,var(--z3),var(--z2));height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div><div class="sess-name">Progressive 9K</div></div></div>
+        <div class="sess-desc">9 km. First 6 km Z2, final 3 km at 6:10–6:20 /km (low Z3). 9 km is a distance milestone.</div>
+        <div class="zone-pills"><span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2 → Z3</span><span class="zpill zpill-pace">6:40 → 6:10 /km</span></div>
+        <div class="coach-cue">Notice how 6:10 /km feels easier than it did 3 weeks ago. That's a measurable aerobic adaptation. Your Z2 ceiling is rising — which directly translates to a lower HR at your 5K race pace.</div>
+        <button class="log-btn" id="logbtn-5-Long Run" onclick="openLog(5,'Long Run','Progressive 9K')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-5"></div>
+    </div>
+  </div>
+
+  <!-- WEEK 6 -->
+  <div class="wk-card" data-week="6" data-phase="p2" id="wk6">
+    <div class="wk-header" onclick="toggleWk(6)">
+      <div class="wk-num" id="wknum6">06</div>
+      <div class="wk-meta"><div class="wk-phase-tag">Phase 2 · Speed</div><div class="wk-title">20-Min Tempo + Recovery Long</div></div>
+      <div class="wk-right"><div class="wk-done-badge" id="wkbadge6">✓ Done</div><div class="wk-chevron">▾</div></div>
+    </div>
+    <div class="wk-body" id="wkbody6">
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z4);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div><div class="sess-name">Continuous Tempo Run</div></div></div>
+        <div class="sess-desc">1 × 20 min continuous tempo @ 5:15 /km. No breaks. Lock the treadmill speed and commit to the full duration.</div>
+        <div class="zone-pills"><span class="zpill zpill-z4"><span class="zpill-dot"></span>Z3–Z4</span><span class="zpill zpill-pace">5:10–5:18 /km</span><span class="zpill zpill-z4"><span class="zpill-dot"></span>163–174 bpm</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">⏱️</span><div class="ar-text"><strong>20 minutes continuous:</strong> This is the key mental and physical benchmark of Phase 2. You've previously done reps up to 12 min (Week 3). Extending to 20 min continuous builds both sustained lactate clearance capacity and — critically — mental endurance at discomfort. Race pace demands you hold this for 26+ minutes.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🔑</span><div class="ar-text"><strong>Your advantage:</strong> You sustained <span class="cn-z5">Z5</span> for 18:58 during the time trial under GI duress. A 20-min <span class="cn-z4">Z4</span> tempo is physiologically easier than what you've already proven. Trust the data your body has already produced.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🧘</span><div class="ar-text"><strong>Treadmill lock strategy:</strong> Set the speed, then look away from the display. Focus on breathing cadence (3 steps in, 2 out) or a fixed point. Watching the time countdown triggers mental resistance that compounds fatigue perception.</div></div>
+        </div>
+        <div class="coach-cue">The discomfort is the adaptation. Minutes 12–16 will be the hardest. Know in advance that this is the expected experience — not a sign that something is wrong. Your cardiovascular system is being upgraded in real time.</div>
+        <button class="log-btn" id="logbtn-6-Interval" onclick="openLog(6,'Interval','Continuous Tempo Run')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z1);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div><div class="sess-name">Easy Recovery Long</div></div></div>
+        <div class="sess-desc">8 km fully easy. Deload run to absorb the tempo stimulus. Do not let ego push the pace.</div>
+        <div class="zone-pills"><span class="zpill zpill-z1"><span class="zpill-dot"></span>Z1–Z2</span><span class="zpill zpill-pace">6:50–7:10 /km</span></div>
+        <div class="coach-cue">Recovery is training. The adaptation from the 20-min tempo happens during recovery — not during the session itself. This run is physiologically necessary. Adding pace or distance here is counterproductive.</div>
+        <button class="log-btn" id="logbtn-6-Long Run" onclick="openLog(6,'Long Run','Easy Recovery Long')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-6"></div>
+    </div>
+  </div>
+
+  <!-- WEEK 7 -->
+  <div class="wk-card" data-week="7" data-phase="p2" id="wk7">
+    <div class="wk-header" onclick="toggleWk(7)">
+      <div class="wk-num" id="wknum7">07</div>
+      <div class="wk-meta"><div class="wk-phase-tag">Phase 2 · KEY WEEK ⭐</div><div class="wk-title">Race Pace Repeats + 10K Long</div></div>
+      <div class="wk-right"><div class="wk-done-badge" id="wkbadge7">✓ Done</div><div class="wk-chevron">▾</div></div>
+    </div>
+    <div class="wk-body" id="wkbody7">
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z4);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div><div class="sess-name">Race Pace Repeats</div></div></div>
+        <div class="sess-desc">6 × 1 km @ 5:10 /km (target sub-26:30 race pace). 75 sec rest. One extra rep compared to Week 4.</div>
+        <div class="zone-pills"><span class="zpill zpill-z4"><span class="zpill-dot"></span>Z4</span><span class="zpill zpill-pace">5:10 /km</span><span class="zpill zpill-z4"><span class="zpill-dot"></span>170–177 bpm</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">🎯</span><div class="ar-text"><strong>The most important session of the block:</strong> 5:10 /km is exactly 25:50 pace for 5K. You are training at your target. The 6 × 1 km format accumulates 6 km of race-pace running with recovery — more race-pace volume than you'll actually race. This is the strongest confidence signal you can generate before Week 10.</div></div>
+          <div class="analysis-row"><span class="ar-icon">📈</span><div class="ar-text"><strong>Progression from Week 4:</strong> 5 reps → 6 reps, 90 sec rest → 75 sec rest. Both changes are meaningful. Less rest means your lactate clearance system must work faster. An extra rep means more cumulative time at race pace. Both adaptations transfer directly to race performance.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🧪</span><div class="ar-text"><strong>Race pace familiarity:</strong> One of the most underrated aspects of training is making the race pace feel "normal." After 6 km at 5:10 /km in reps, your neuromuscular system will have logged those patterns. Race day execution becomes recall, not discovery.</div></div>
+        </div>
+        <div class="coach-cue">5:10 /km = sub-26 5K pace. You're training at your goal today. This session is the closest you'll get to race conditions before Week 10. Treat it with that respect — not as something to survive, but as something to execute with precision.</div>
+        <button class="log-btn" id="logbtn-7-Interval" onclick="openLog(7,'Interval','Race Pace Repeats')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z2);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div><div class="sess-name">Peak Long Run — 10K</div></div></div>
+        <div class="sess-desc">10 km at Z2 pace. Your longest training run. A landmark session — the aerobic ceiling is being set here.</div>
+        <div class="zone-pills"><span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2</span><span class="zpill zpill-pace">6:35–6:55 /km</span><span class="zpill zpill-z2"><span class="zpill-dot"></span>145–158 bpm</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">🏔️</span><div class="ar-text"><strong>Why 10 km matters:</strong> A runner who can comfortably cover 10 km aerobically has built an engine capable of racing 5 km at a dramatically higher percentage of VO2max. The long run raises the physiological ceiling — the race is the expression of that ceiling.</div></div>
+          <div class="analysis-row"><span class="ar-icon">📊</span><div class="ar-text"><strong>Cardiac output signal:</strong> If your HR at 6:40 /km has dropped compared to Week 1 (even slightly), that's direct evidence of improved stroke volume — your heart is pumping more blood per beat. This is the adaptation that drives sustainable race pace improvement.</div></div>
+        </div>
+        <div class="coach-cue">10 km done easy confirms you're ready to race 5 km fast. If 10 km at Z2 feels manageable, 5 km at Z4–Z5 is sustainable. The aerobic ceiling is now set for race day. Don't push this one.</div>
+        <button class="log-btn" id="logbtn-7-Long Run" onclick="openLog(7,'Long Run','Peak Long Run — 10K')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-7"></div>
+    </div>
+  </div>
+
+  <!-- ─── PHASE 3 ─── -->
+  <div class="phase-hdr" style="margin-top:8px;">
+    <span class="phase-chip pc-3">Phase 3</span>
+    <span class="phase-subtitle">Sharpening & Race Prep · Weeks 8–10</span>
+  </div>
+  <div class="coach-callout">
+    <strong>Objective:</strong> Convert training stimulus into race-day performance. Volume drops slightly, intensity sharpens. Fueling protocol rehearsed in Week 9. Week 10 is race day.
+  </div>
+
+  <!-- WEEK 8 -->
+  <div class="wk-card" data-week="8" data-phase="p3" id="wk8">
+    <div class="wk-header" onclick="toggleWk(8)">
+      <div class="wk-num" id="wknum8">08</div>
+      <div class="wk-meta"><div class="wk-phase-tag">Phase 3 · Sharpen</div><div class="wk-title">Speed-Endurance + Surge Long</div></div>
+      <div class="wk-right"><div class="wk-done-badge" id="wkbadge8">✓ Done</div><div class="wk-chevron">▾</div></div>
+    </div>
+    <div class="wk-body" id="wkbody8">
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z4);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div><div class="sess-name">Speed-Endurance Mix</div></div></div>
+        <div class="sess-desc">3 × 2 km @ 5:12 /km with 2 min jog recovery. Longer reps, slightly eased pace. Form under fatigue is the focus.</div>
+        <div class="zone-pills"><span class="zpill zpill-z4"><span class="zpill-dot"></span>Z4</span><span class="zpill zpill-pace">5:10–5:15 /km</span><span class="zpill zpill-z4"><span class="zpill-dot"></span>168–176 bpm</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">📏</span><div class="ar-text"><strong>2 km reps simulate race segments:</strong> A 5K can be thought of as 2 × 2 km plus a 1 km close. Each rep here maps directly to that structure. By the 1.5 km mark of each rep you're running in a fatigued state — exactly what KM 3 and 4 of the race will demand.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🏃</span><div class="ar-text"><strong>Form focus:</strong> As fatigue sets in during the 2 km reps, your running mechanics typically degrade — heel striking increases, arm crossing increases, cadence drops. The coaching cue: keep cadence at 170+ spm in the last 400m of each rep regardless of discomfort.</div></div>
+        </div>
+        <div class="coach-cue">Hold form late in each rep — that's where the race is decided. Sloppy form costs you 10–15 sec in a 5K. Specifically: keep your heel from overstriding in the final 400m of each 2 km rep. Short, fast, forward.</div>
+        <button class="log-btn" id="logbtn-8-Interval" onclick="openLog(8,'Interval','Speed-Endurance Mix')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:linear-gradient(180deg,var(--z3),var(--z2),var(--z3));height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div><div class="sess-name">Surge Long Run</div></div></div>
+        <div class="sess-desc">9 km. Km 4–6 at 6:00 /km (Z3), rest at Z2. A direct race-specific stimulus buried inside an easy run.</div>
+        <div class="zone-pills"><span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2</span><span class="zpill zpill-z3"><span class="zpill-dot"></span>Z3 surge (km 4–6)</span><span class="zpill zpill-pace">6:40 → 6:00 → 6:40</span></div>
+        <div class="coach-cue">This teaches your body to surge mid-run and recover without stopping — the exact physiological demand of racing. The Z3 section should feel uncomfortable but controlled. You should be relieved when you drop back to Z2, not coasting.</div>
+        <button class="log-btn" id="logbtn-8-Long Run" onclick="openLog(8,'Long Run','Surge Long Run')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-8"></div>
+    </div>
+  </div>
+
+  <!-- WEEK 9 -->
+  <div class="wk-card" data-week="9" data-phase="p3" id="wk9">
+    <div class="wk-header" onclick="toggleWk(9)">
+      <div class="wk-num" id="wknum9">09</div>
+      <div class="wk-meta"><div class="wk-phase-tag">Phase 3 · DRESS REHEARSAL 🎯</div><div class="wk-title">Race Simulation + Pre-Taper Long</div></div>
+      <div class="wk-right"><div class="wk-done-badge" id="wkbadge9">✓ Done</div><div class="wk-chevron">▾</div></div>
+    </div>
+    <div class="wk-body" id="wkbody9">
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:linear-gradient(180deg,var(--z5),var(--z4));height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div><div class="sess-name">Race Simulation</div></div></div>
+        <div class="sess-desc">Full race-day fueling rehearsal. 4 × 1 km @ 5:05–5:08 /km, 60 sec rest. Finish with 400m all-out. Execute the fueling protocol exactly.</div>
+        <div class="zone-pills"><span class="zpill zpill-z4"><span class="zpill-dot"></span>Z4 reps</span><span class="zpill zpill-z5"><span class="zpill-dot"></span>Z5 on 400m</span><span class="zpill zpill-pace">5:05–5:08 /km</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">🧫</span><div class="ar-text"><strong>GI rehearsal is the primary purpose:</strong> Your KM 2.0 cramps in March came from sub-optimal hydration combined with high gastric content. Today's session stress-tests your revised fueling protocol under near-race-pace intensity. This is the only opportunity to identify and fix problems before Week 10.</div></div>
+          <div class="analysis-row"><span class="ar-icon">⚡</span><div class="ar-text"><strong>The 400m all-out:</strong> Finishing with a maximal 400m after 4 km at race pace is neurologically potent. It recruits fast-twitch fibres under glycogen-depleted conditions and trains your closing kick mechanism. Your 5:01 final km in the March TT showed this kick exists — this session maintains it.</div></div>
+          <div class="analysis-row"><span class="ar-icon">📋</span><div class="ar-text"><strong>Post-session audit:</strong> Immediately after, score your GI status 1–10. Note exact food and water timing. If GI score &gt; 2, adjust the protocol before Week 10 — specifically: extend T-3h to T-3.5h and reduce sandwich to 3/4 portion.</div></div>
+        </div>
+        <div class="coach-cue">Any GI discomfort here = adjust before Week 10. Never introduce new food or drink on race day. This is the only test. If the protocol works cleanly today, execute it identically in Week 10.</div>
+        <button class="log-btn" id="logbtn-9-Interval" onclick="openLog(9,'Interval','Race Simulation')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z2);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-long">Long Run</span></div><div class="sess-name">Pre-Taper Easy Long</div></div></div>
+        <div class="sess-desc">8 km fully easy. The last significant aerobic stimulus before the taper. Do not push.</div>
+        <div class="zone-pills"><span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2</span><span class="zpill zpill-pace">6:45–7:00 /km</span></div>
+        <div class="coach-cue">You're loading the spring, not firing it. Legs should feel progressively better through this week and into Week 10. If they don't, you've done too much — pull back on the remaining sessions.</div>
+        <button class="log-btn" id="logbtn-9-Long Run" onclick="openLog(9,'Long Run','Pre-Taper Easy Long')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-9"></div>
+    </div>
+  </div>
+
+  <!-- WEEK 10 -->
+  <div class="wk-card" data-week="10" data-phase="p3" id="wk10">
+    <div class="wk-header" onclick="toggleWk(10)">
+      <div class="wk-num" id="wknum10">10</div>
+      <div class="wk-meta"><div class="wk-phase-tag">Phase 3 · RACE WEEK 🏁</div><div class="wk-title">Activation + 5K Time Trial</div></div>
+      <div class="wk-right"><div class="wk-done-badge" id="wkbadge10">✓ Done</div><div class="wk-chevron">▾</div></div>
+    </div>
+    <div class="wk-body" id="wkbody10">
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:var(--z3);height:60px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-interval">Interval</span></div><div class="sess-name">Activation & Strides</div></div></div>
+        <div class="sess-desc">2 days before time trial: 15 min easy jog + 4 × 30 sec strides @ 4:40–4:50 /km. Wake the legs — nothing more.</div>
+        <div class="zone-pills"><span class="zpill zpill-z2"><span class="zpill-dot"></span>Z2 jog</span><span class="zpill zpill-z5"><span class="zpill-dot"></span>Brief Z5 strides</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Analytical Breakdown</div>
+          <div class="analysis-row"><span class="ar-icon">⚡</span><div class="ar-text"><strong>Neuromuscular activation:</strong> The 30-sec strides prime your fast-twitch motor units without fatiguing them. Research consistently shows that 24–48 hr pre-race strides improve race performance by 1.5–3% compared to complete rest, through improved neuromuscular recruitment on race day.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🎯</span><div class="ar-text"><strong>Signal check:</strong> After the strides, you should feel fast, light, and energised — not tired. Tired after strides = undertapered. Fast and loose = ready. This is your readiness diagnostic for race day.</div></div>
+        </div>
+        <div class="coach-cue">You should feel fast and loose after, not tired. If you feel heavy or flat, rest one more day. The strides are diagnostic — they tell you how ready you are. Trust what your body reports.</div>
+        <button class="log-btn" id="logbtn-10-Interval" onclick="openLog(10,'Interval','Activation & Strides')">＋ Log this session</button>
+      </div>
+      <div class="session-divider"></div>
+      <div class="sess-block">
+        <div class="sess-top-row"><div class="sess-zone-bar" style="background:linear-gradient(180deg,var(--z5),var(--z4),var(--z5));height:80px;"></div><div class="sess-content"><div class="sess-tag-row"><span class="s-tag st-trial">Time Trial</span></div><div class="sess-name">5K Time Trial — Sub-26:30</div></div></div>
+        <div class="sess-desc">Full race-day protocol. Pacing: Km 1 @ 5:25 · Km 2–4 @ 5:15 · Km 5 sub-5:00. Split math: 5:25 + 5:18 + 5:15 + 5:12 + 5:00 = 26:10.</div>
+        <div class="zone-pills"><span class="zpill zpill-z4"><span class="zpill-dot"></span>Z4 km 1–3</span><span class="zpill zpill-z5"><span class="zpill-dot"></span>Z5 km 4–5</span><span class="zpill zpill-pace">5:17 avg /km</span></div>
+        <div class="analysis-box">
+          <div class="analysis-title">📊 Race Day Analytical Notes</div>
+          <div class="analysis-row"><span class="ar-icon">🎯</span><div class="ar-text"><strong>Why start at 5:25:</strong> In March you likely went out at 5:15–5:20 and hit GI cramps at KM 2.0. Starting 10–15 sec/km slower for the first km keeps you in <span class="cn-z4">Z4</span> instead of redlining into <span class="cn-z5">Z5</span> — and the time cost is only ~5–8 seconds total versus the 30–60 sec you lose cramping and recovering.</div></div>
+          <div class="analysis-row"><span class="ar-icon">📈</span><div class="ar-text"><strong>Negative split strategy:</strong> Runners who negative split (second half faster) in 5Ks outperform even-pace runners by an average of 4% in time trials. Your 5:01 final km under duress in March is direct evidence of your closing ability when properly paced into it.</div></div>
+          <div class="analysis-row"><span class="ar-icon">🧠</span><div class="ar-text"><strong>KM 3 is the decision point:</strong> At KM 3 in a 5K, most runners either pull back (under-raced) or die (went out too hard). The correct response: hold exactly what you've been holding. The work is already done — execution is all that remains.</div></div>
+        </div>
+        <div class="coach-cue">Don't go out at 5:10. The cramps at KM 2.0 in March were partly from early anaerobic overdraft triggering GI distress. Patience in KM 1–1.5 is the entire race. Your engine is ready. Let it build correctly.</div>
+        <button class="log-btn" id="logbtn-10-Time Trial" onclick="openLog(10,'Time Trial','5K Time Trial — Sub-26:30')">＋ Log this session</button>
+      </div>
+      <div class="ilf" id="ilf-10"></div>
+    </div>
+  </div>
+
+  <div class="vf">Sub-25 Pathway · 10-Week Program · Horizon 7.0 · 1.0% Incline</div>
+</div><!-- /view-program -->
+
+
+<!-- ═══════════════════════════
+     VIEW: LOG
+═══════════════════════════ -->
+<div class="view" id="view-log">
+  <div class="log-top">
+    <div class="log-top-title">Session Log</div>
+    <div class="log-top-sub">Your performance record across 10 weeks</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="log-progress-grid">
+    <div class="lpg-box"><div class="lpg-val" id="lpg-sessions">0</div><div class="lpg-label">Sessions</div></div>
+    <div class="lpg-box"><div class="lpg-val" id="lpg-best">—</div><div class="lpg-label">Best Pace</div></div>
+    <div class="lpg-box"><div class="lpg-val" id="lpg-xp">0</div><div class="lpg-label">XP</div></div>
+  </div>
+
+  <!-- Week progress dots -->
+  <div class="wk-progress-strip">
+    <div class="wps-label">Week Progress</div>
+    <div class="wps-dots" id="wpsDots"></div>
+  </div>
+
+  <!-- Achievement shelf -->
+  <div class="achievement-shelf">
+    <div class="ach-title">⚡ Achievements</div>
+    <div class="ach-row" id="achRow">
+      <div class="ach-badge locked" id="ach-first"><div class="ach-icon">🔥</div><div class="ach-name">First Session</div></div>
+      <div class="ach-badge locked" id="ach-3sessions"><div class="ach-icon">⚡</div><div class="ach-name">3 Sessions</div></div>
+      <div class="ach-badge locked" id="ach-5sessions"><div class="ach-icon">🌊</div><div class="ach-name">5 Sessions</div></div>
+      <div class="ach-badge locked" id="ach-interval"><div class="ach-icon">💥</div><div class="ach-name">First Interval</div></div>
+      <div class="ach-badge locked" id="ach-10k"><div class="ach-icon">🏔️</div><div class="ach-name">10K Long Run</div></div>
+      <div class="ach-badge locked" id="ach-timetrial"><div class="ach-icon">🏁</div><div class="ach-name">Time Trial</div></div>
+      <div class="ach-badge locked" id="ach-p1"><div class="ach-icon">🌱</div><div class="ach-name">Phase 1 Done</div></div>
+      <div class="ach-badge locked" id="ach-p2"><div class="ach-icon">🚀</div><div class="ach-name">Phase 2 Done</div></div>
+      <div class="ach-badge locked" id="ach-allweeks"><div class="ach-icon">👑</div><div class="ach-name">Block Complete</div></div>
+    </div>
+  </div>
+
+  <!-- Session list -->
+  <div class="log-filter-row">
+    <div class="lf-title">All Sessions</div>
+    <select class="lf-select" id="logFilterSel" onchange="renderLog()">
+      <option value="all">All Types</option>
+      <option value="Interval">Intervals</option>
+      <option value="Long Run">Long Runs</option>
+      <option value="Time Trial">Time Trials</option>
+    </select>
+  </div>
+
+  <div id="logEntriesList"></div>
+  <div class="empty-state" id="logEmpty">
+    <div class="empty-icon">📋</div>
+    No sessions logged yet.<br>Open a week in the Program tab<br>and tap <strong style="color:var(--t1)">Log this session</strong>.
+  </div>
+
+  <!-- Export -->
+  <div class="export-card">
+    <div class="export-title">📊 Export Performance Data</div>
+    <div class="export-desc">Download your full training log as a CSV — ready for Excel, Numbers, or Google Sheets. Includes all pace, HR, RPE, and coaching notes from every session.</div>
+    <button class="export-btn" onclick="exportCSV()">⬇ Download CSV</button>
+    <button class="export-btn export-btn-sec" onclick="exportText()">📋 Copy as Text</button>
+  </div>
+
+  <div class="vf">Training Log · Data stored locally · Export anytime</div>
+</div><!-- /view-log -->
+
+
+<!-- BOTTOM TABS -->
+<div class="bottom-tabs">
+  <button class="tab-btn active" id="tab-program" onclick="switchTab('program',this)">
+    <div class="tab-icon">📋</div><div>Program</div>
+  </button>
+  <button class="tab-btn" id="tab-log" onclick="switchTab('log',this)">
+    <div class="tab-icon">📓</div><div>Log</div>
+  </button>
+</div>
+
+
+<script>
+// ═══════════════════════
+// CONSTANTS
+// ═══════════════════════
+const STORE = 'sub25_v3';
+const RPE_LABELS = ['','Recovery','Easy','Moderate','Moderate','Comf. Hard','Hard','Hard','Very Hard','Max Effort','Absolute Max'];
+const XP_PER_SESSION = 50;
+const XP_PER_INTERVAL = 75;
+const XP_PER_TRIAL = 100;
+
+// ═══════════════════════
+// STORAGE
+// ═══════════════════════
+function getEntries() { try { return JSON.parse(localStorage.getItem(STORE) || '[]'); } catch { return []; } }
+function saveEntries(arr) { localStorage.setItem(STORE, JSON.stringify(arr)); }
+
+// ═══════════════════════
+// XP CALC
+// ═══════════════════════
+function calcXP(entries) {
+  return entries.reduce((sum, e) => {
+    if (e.type === 'Time Trial') return sum + XP_PER_TRIAL;
+    if (e.type === 'Interval')   return sum + XP_PER_INTERVAL;
+    return sum + XP_PER_SESSION;
+  }, 0);
+}
+function xpLevel(xp) {
+  if (xp < 150)  return { lvl:1, title:'Newcomer' };
+  if (xp < 350)  return { lvl:2, title:'Builder' };
+  if (xp < 600)  return { lvl:3, title:'Grinder' };
+  if (xp < 900)  return { lvl:4, title:'Threshold Runner' };
+  if (xp < 1200) return { lvl:5, title:'Race Ready' };
+  return { lvl:6, title:'Sub-25 Contender' };
+}
+
+// ═══════════════════════
+// ACHIEVEMENTS
+// ═══════════════════════
+function updateAchievements(entries) {
+  const total   = entries.length;
+  const types   = entries.map(e => e.type);
+  const weeks   = new Set(entries.map(e => +e.week));
+  const hasP1   = [1,2,3].every(w => weeks.has(w));
+  const hasP2   = [4,5,6,7].every(w => weeks.has(w));
+  const allDone = weeks.size >= 10;
+  const has10k  = entries.some(e => e.type === 'Long Run' && +e.week === 7);
+  const hasTrial= types.includes('Time Trial');
+
+  const toggle = (id, earned) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('earned', earned);
+    el.classList.toggle('locked', !earned);
+  };
+  toggle('ach-first',     total >= 1);
+  toggle('ach-3sessions', total >= 3);
+  toggle('ach-5sessions', total >= 5);
+  toggle('ach-interval',  types.includes('Interval'));
+  toggle('ach-10k',       has10k);
+  toggle('ach-timetrial', hasTrial);
+  toggle('ach-p1',        hasP1);
+  toggle('ach-p2',        hasP2);
+  toggle('ach-allweeks',  allDone);
+}
+
+// ═══════════════════════
+// DASHBOARD REFRESH
+// ═══════════════════════
+function refreshDash() {
+  const entries = getEntries();
+  const total   = entries.length;
+  const xp      = calcXP(entries);
+  const weeks   = new Set(entries.map(e => +e.week)).size;
+  const level   = xpLevel(xp);
+
+  // Stats
+  document.getElementById('ds-sessions').textContent = total;
+  document.getElementById('ds-xp').textContent = xp;
+  document.getElementById('ds-wks').textContent = weeks + ' / 10';
+
+  // Best pace
+  const paces = entries.filter(e => e.pace && /^\d+:\d{2}$/.test(e.pace))
+    .map(e => { const [m,s] = e.pace.split(':'); return +m*60+ +s; });
+  if (paces.length) {
+    const b = Math.min(...paces);
+    document.getElementById('ds-best').textContent = Math.floor(b/60)+':'+(b%60<10?'0':'')+(b%60);
+  }
+
+  // Progress ring
+  const pct = Math.min(100, Math.round((total / 20) * 100));
+  const circ = 251.2;
+  const offset = circ - (circ * pct / 100);
+  document.getElementById('prFill').style.strokeDashoffset = offset;
+  document.getElementById('prNum').textContent = pct + '%';
+
+  // XP strip
+  document.getElementById('xpTitle').textContent = level.title;
+  document.getElementById('xpBadge').textContent = 'Lvl ' + level.lvl;
+  document.getElementById('xpSub').textContent = total === 0
+    ? 'Log your first session to earn XP and unlock badges'
+    : `${xp} XP earned · ${total} session${total!==1?'s':''} logged`;
+
+  // Week log dots on week cards
+  for (let w = 1; w <= 10; w++) {
+    const wEntries = entries.filter(e => +e.week === w);
+    const badge  = document.getElementById('wkbadge'+w);
+    const numEl  = document.getElementById('wknum'+w);
+    const cardEl = document.getElementById('wk'+w);
+    if (wEntries.length > 0) {
+      if (badge)  badge.classList.add('show');
+      if (numEl)  numEl.classList.add('done');
+      if (cardEl) cardEl.classList.add('wk-done');
+      // Update log buttons
+      wEntries.forEach(e => {
+        const typeKey = e.type;
+        const btn = document.getElementById('logbtn-'+w+'-'+typeKey);
+        if (btn) { btn.classList.add('logged'); btn.textContent = '✓ Session logged'; }
+      });
+    }
+  }
+}
+
+// ═══════════════════════
+// TAB SWITCH
+// ═══════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  btn.classList.add('active');
+  if (name !== 'program') closeWeekJump();
+  if (name === 'log') renderLog();
+  window.scrollTo(0,0);
+}
+
+// ═══════════════════════
+// WEEK JUMP
+// ═══════════════════════
+function toggleWeekJump() {
+  const d = document.getElementById('wkDrawer');
+  const b = document.getElementById('wkJumpBtn');
+  const o = d.classList.toggle('open');
+  b.classList.toggle('open', o);
+  b.textContent = o ? 'Jump to Week ▴' : 'Jump to Week ▾';
+}
+function closeWeekJump() {
+  document.getElementById('wkDrawer').classList.remove('open');
+  const b = document.getElementById('wkJumpBtn');
+  b.classList.remove('open'); b.textContent = 'Jump to Week ▾';
+}
+function jumpWeek(filter, btn) {
+  document.querySelectorAll('.wd-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.wk-card').forEach(c => {
+    const show = filter === 'all' ? true
+      : ['p1','p2','p3'].includes(filter) ? c.dataset.phase === filter
+      : c.dataset.week === filter;
+    c.classList.toggle('hidden', !show);
+    if (show && !['all','p1','p2','p3'].includes(filter)) c.classList.add('open');
+  });
+  closeWeekJump();
+  if (!['all','p1','p2','p3'].includes(filter)) {
+    setTimeout(() => {
+      const f = document.querySelector('.wk-card:not(.hidden)');
+      if (f) f.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 80);
+  }
+}
+
+// ═══════════════════════
+// WEEK ACCORDION
+// ═══════════════════════
+function toggleWk(n) { document.getElementById('wk'+n)?.classList.toggle('open'); }
+
+// ═══════════════════════
+// INLINE LOG FORM
+// ═══════════════════════
+let activeForm = null;
+
+function openLog(week, type, name) {
+  // Close any existing open form
+  if (activeForm) {
+    const prev = document.getElementById('ilf-'+activeForm.week);
+    if (prev) { prev.classList.remove('open'); prev.innerHTML = ''; }
+  }
+  // Toggle off if same
+  if (activeForm && activeForm.week === week && activeForm.type === type) {
+    activeForm = null; return;
+  }
+  activeForm = { week, type, name };
+
+  const entries = getEntries();
+  const ex = entries.find(e => +e.week === week && e.type === type) || {};
+  const today = new Date().toISOString().split('T')[0];
+  const ilfEl = document.getElementById('ilf-'+week);
+  if (!ilfEl) return;
+
+  ilfEl.innerHTML = `
+    <div class="ilf-heading">Log: ${name}</div>
+    <div class="ilf-grid">
+      <div class="ilf-field"><label class="ilf-label">Date</label><input type="date" id="ilf-date" class="ilf-input" value="${ex.date||today}"></div>
+      <div class="ilf-field"><label class="ilf-label">Distance (km)</label><input type="number" id="ilf-dist" class="ilf-input" placeholder="5.0" step="0.1" value="${ex.distance||''}"></div>
+      <div class="ilf-field"><label class="ilf-label">Avg Pace (/km)</label><input type="text" id="ilf-pace" class="ilf-input" placeholder="5:24" value="${ex.pace||''}"></div>
+      <div class="ilf-field"><label class="ilf-label">Avg HR (bpm)</label><input type="number" id="ilf-hr" class="ilf-input" placeholder="168" value="${ex.hrAvg||''}"></div>
+      <div class="ilf-field"><label class="ilf-label">Max HR (bpm)</label><input type="number" id="ilf-hrmax" class="ilf-input" placeholder="184" value="${ex.hrMax||''}"></div>
+      <div class="ilf-field"><label class="ilf-label">Hamstring (0–10)</label><input type="number" id="ilf-ham" class="ilf-input" placeholder="0" min="0" max="10" value="${ex.hamstring||''}"></div>
+      <div class="ilf-field"><label class="ilf-label">GI Issues</label>
+        <select id="ilf-gi" class="ilf-input ilf-select">
+          <option ${(ex.gi||'None')==='None'?'selected':''}>None</option>
+          <option ${ex.gi==='Mild'?'selected':''}>Mild</option>
+          <option ${ex.gi==='Moderate'?'selected':''}>Moderate</option>
+          <option ${ex.gi==='Severe'?'selected':''}>Severe</option>
+        </select>
+      </div>
+      <div class="ilf-field"><label class="ilf-label">Completed?</label>
+        <select id="ilf-status" class="ilf-input ilf-select">
+          <option ${(ex.status||'Full')==='Full'?'selected':''}>Full</option>
+          <option ${ex.status==='Modified'?'selected':''}>Modified</option>
+          <option ${ex.status==='Partial'?'selected':''}>Partial</option>
+          <option ${ex.status==='Skipped'?'selected':''}>Skipped</option>
+        </select>
+      </div>
+    </div>
+    <div class="ilf-label" style="margin-bottom:8px;">Effort / RPE</div>
+    <div class="rpe-row">
+      <input type="range" class="rpe-track" id="ilf-rpe" min="1" max="10" value="${ex.rpe||7}" oninput="updRpe(this.value)">
+      <div class="rpe-display"><div class="rpe-num" id="ilfRpeNum">${ex.rpe||7}</div><div class="rpe-lbl" id="ilfRpeLbl">${RPE_LABELS[+(ex.rpe||7)]}</div></div>
+    </div>
+    <div class="ilf-field ilf-full" style="margin-top:10px;margin-bottom:12px;">
+      <label class="ilf-label">Notes & Coaching Feedback</label>
+      <textarea id="ilf-notes" class="ilf-input ilf-textarea" placeholder="How did it feel? Splits, HR zones, hamstring, GI, form observations...">${ex.notes||''}</textarea>
+    </div>
+    <button class="ilf-save" onclick="saveLog(${week},'${type}','${name.replace(/'/g,"\\'")}')">
+      ${ex.id ? 'Update Session' : 'Save Session — +' + (type==='Time Trial'?XP_PER_TRIAL:type==='Interval'?XP_PER_INTERVAL:XP_PER_SESSION) + ' XP'}
+    </button>
+    <button class="ilf-cancel" onclick="cancelLog(${week})">Cancel</button>
+  `;
+  ilfEl.classList.add('open');
+  setTimeout(() => ilfEl.scrollIntoView({behavior:'smooth', block:'nearest'}), 80);
+}
+function updRpe(v) {
+  const n = document.getElementById('ilfRpeNum');
+  const l = document.getElementById('ilfRpeLbl');
+  if (n) n.textContent = v;
+  if (l) l.textContent = RPE_LABELS[+v] || '';
+}
+function cancelLog(week) {
+  const el = document.getElementById('ilf-'+week);
+  if (el) { el.classList.remove('open'); el.innerHTML = ''; }
+  activeForm = null;
+}
+function saveLog(week, type, name) {
+  const date      = document.getElementById('ilf-date').value;
+  const distance  = document.getElementById('ilf-dist').value;
+  const pace      = document.getElementById('ilf-pace').value.trim();
+  const hrAvg     = document.getElementById('ilf-hr').value;
+  const hrMax     = document.getElementById('ilf-hrmax').value;
+  const hamstring = document.getElementById('ilf-ham').value;
+  const gi        = document.getElementById('ilf-gi').value;
+  const status    = document.getElementById('ilf-status').value;
+  const rpe       = document.getElementById('ilf-rpe').value;
+  const notes     = document.getElementById('ilf-notes').value.trim();
+  if (!date) { alert('Please enter a date.'); return; }
+
+  let entries = getEntries().filter(e => !(+e.week === week && e.type === type));
+  entries.unshift({ id:Date.now(), week, type, name, date, distance, pace, hrAvg, hrMax, hamstring, gi, status, rpe, notes });
+  saveEntries(entries);
+  cancelLog(week);
+  refreshDash();
+  updateAchievements(entries);
+
+  // Update log btn
+  const btn = document.getElementById('logbtn-'+week+'-'+type);
+  if (btn) { btn.classList.add('logged'); btn.textContent = '✓ Session logged'; }
+
+  // XP flash
+  const xpEl = document.getElementById('xpBadge');
+  if (xpEl) { xpEl.style.background = 'rgba(184,140,255,0.5)'; setTimeout(()=>xpEl.style.background='',600); }
+}
+
+// ═══════════════════════
+// RENDER LOG
+// ═══════════════════════
+function fmtDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+parseInt(day)+', '+y;
+}
+function typeChipClass(t) {
+  return t==='Interval'?'ect-interval':t==='Long Run'?'ect-long':t==='Time Trial'?'ect-trial':'ect-other';
+}
+function renderLog() {
+  const all     = getEntries();
+  const filter  = document.getElementById('logFilterSel').value;
+  const entries = filter==='all' ? all : all.filter(e=>e.type===filter);
+  const list    = document.getElementById('logEntriesList');
+  const empty   = document.getElementById('logEmpty');
+
+  // Stats
+  document.getElementById('lpg-sessions').textContent = all.length;
+  document.getElementById('lpg-xp').textContent = calcXP(all);
+  const paces = all.filter(e=>e.pace&&/^\d+:\d{2}$/.test(e.pace)).map(e=>{const[m,s]=e.pace.split(':');return +m*60+ +s;});
+  if (paces.length) { const b=Math.min(...paces); document.getElementById('lpg-best').textContent=Math.floor(b/60)+':'+(b%60<10?'0':'')+(b%60); }
+
+  // Week progress dots
+  const dots = document.getElementById('wpsDots');
+  if (dots) {
+    const loggedWeeks = new Set(all.map(e=>+e.week));
+    dots.innerHTML = Array.from({length:10},(_,i)=>{
+      const w=i+1;
+      const cls = loggedWeeks.has(w)?'done':'';
+      return `<div class="wps-dot ${cls}" title="Week ${w}"></div>`;
+    }).join('');
+  }
+
+  updateAchievements(all);
+
+  if (!entries.length) { list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+
+  list.innerHTML = entries.map(e=>`
+    <div class="entry-card" id="ec-${e.id}">
+      <div class="entry-card-hdr" onclick="toggleEntry(${e.id})">
+        <div class="ec-left">
+          <div class="ec-chips">
+            <span class="ec-date">${fmtDate(e.date)}</span>
+            <span class="ec-wk-chip">Week ${e.week}</span>
+            <span class="ec-type-chip ${typeChipClass(e.type)}">${e.type}</span>
+          </div>
+          <div class="ec-name">${e.name||e.type}</div>
+        </div>
+        <div class="ec-right">
+          <span class="ec-chevron">▾</span>
+          <button class="ec-del" onclick="delEntry(event,${e.id})">✕</button>
+        </div>
+      </div>
+      <div class="entry-body">
+        <div class="entry-stat-grid">
+          ${e.distance?`<div class="esb"><div class="esb-l">Distance</div><div class="esb-v gold">${e.distance} km</div></div>`:''}
+          ${e.pace?`<div class="esb"><div class="esb-l">Avg Pace</div><div class="esb-v">${e.pace} /km</div></div>`:''}
+          ${e.hrAvg?`<div class="esb"><div class="esb-l">Avg HR</div><div class="esb-v">${e.hrAvg} bpm</div></div>`:''}
+          ${e.hrMax?`<div class="esb"><div class="esb-l">Max HR</div><div class="esb-v red">${e.hrMax} bpm</div></div>`:''}
+          ${e.rpe?`<div class="esb"><div class="esb-l">RPE</div><div class="esb-v orange">${e.rpe}/10</div></div>`:''}
+          ${e.hamstring?`<div class="esb"><div class="esb-l">Hamstring</div><div class="esb-v ${+e.hamstring>=4?'red':''}">${e.hamstring}/10</div></div>`:''}
+          ${e.gi&&e.gi!=='None'?`<div class="esb"><div class="esb-l">GI</div><div class="esb-v red">${e.gi}</div></div>`:''}
+          ${e.status?`<div class="esb"><div class="esb-l">Completed</div><div class="esb-v ${e.status!=='Full'?'red':'green'}">${e.status}</div></div>`:''}
+        </div>
+        ${e.notes?`<div class="entry-notes">${e.notes.replace(/\n/g,'<br>')}</div>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+function toggleEntry(id) { document.getElementById('ec-'+id)?.classList.toggle('open'); }
+function delEntry(evt, id) {
+  evt.stopPropagation();
+  if (!confirm('Delete this session?')) return;
+  saveEntries(getEntries().filter(e=>e.id!==id));
+  renderLog(); refreshDash();
+}
+
+// ═══════════════════════
+// EXPORT
+// ═══════════════════════
+function exportCSV() {
+  const entries = getEntries();
+  if (!entries.length) { alert('No sessions logged yet.'); return; }
+  const hdrs = ['Week','Session','Type','Date','Distance(km)','AvgPace(/km)','AvgHR(bpm)','MaxHR(bpm)','Hamstring(0-10)','GI','Status','RPE(1-10)','Notes'];
+  const rows  = entries.map(e=>[e.week,e.name,e.type,e.date,e.distance,e.pace,e.hrAvg,e.hrMax,e.hamstring,e.gi,e.status,e.rpe,(e.notes||'').replace(/"/g,'""')].map(v=>`"${v||''}"`).join(','));
+  const csv   = [hdrs.join(','),...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'sub25-training-log.csv';
+  a.click();
+}
+function exportText() {
+  const entries = getEntries();
+  if (!entries.length) { alert('No sessions logged yet.'); return; }
+  const lines = ['SUB-25 TRAINING LOG','='+'='.repeat(20),''];
+  entries.forEach(e=>{
+    lines.push(`Week ${e.week} · ${e.type} · ${fmtDate(e.date)}`);
+    lines.push(`Session: ${e.name||''}`);
+    if (e.distance) lines.push(`Distance: ${e.distance} km`);
+    if (e.pace)     lines.push(`Avg Pace: ${e.pace} /km`);
+    if (e.hrAvg)    lines.push(`Avg HR: ${e.hrAvg} bpm`);
+    if (e.hrMax)    lines.push(`Max HR: ${e.hrMax} bpm`);
+    if (e.hamstring) lines.push(`Hamstring: ${e.hamstring}/10`);
+    if (e.gi&&e.gi!=='None') lines.push(`GI: ${e.gi}`);
+    if (e.status)   lines.push(`Completed: ${e.status}`);
+    if (e.rpe)      lines.push(`RPE: ${e.rpe}/10 — ${RPE_LABELS[+e.rpe]||''}`);
+    if (e.notes)    lines.push(`Notes: ${e.notes}`);
+    lines.push('---');
+  });
+  navigator.clipboard.writeText(lines.join('\n'))
+    .then(()=>alert('Log copied to clipboard!'))
+    .catch(()=>alert('Copy failed — use CSV export instead.'));
+}
+
+// ═══════════════════════
+// INSTALL BANNER
+// ═══════════════════════
+function dismissBanner() {
+  document.getElementById('installBanner').style.display='none';
+  localStorage.setItem('ib_dismissed','1');
+}
+function showInstructions() {
+  const el = document.getElementById('installSteps');
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+function downloadSelf() {
+  // Grab the full HTML of this page and trigger a download
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'sub25-coaching-app.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════
+// INIT
+// ═══════════════════════
+window.addEventListener('DOMContentLoaded', ()=>{
+  // Banner logic
+  const isIOS      = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const dismissed  = localStorage.getItem('ib_dismissed');
+  const standalone = window.navigator.standalone;
+  if (!isIOS || dismissed || standalone) document.getElementById('installBanner').style.display='none';
+
+  // Open week 1
+  document.getElementById('wk1')?.classList.add('open');
+
+  // Restore state
+  refreshDash();
+  updateAchievements(getEntries());
+});
+</script>
+</body>
+</html>
